@@ -1,24 +1,21 @@
-let { Engine, Render, World, Bodies } = Matter
+let config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    scene: {
+        preload,
+        create,
+        update
+    }
+};
 
-let engine = Engine.create()
-let render = Render.create({
-    element: document.body,
-    engine: engine
-})
+let game = new Phaser.Game(config);
 
-///
-/// create scene
-///
+function preload() {
+}
 
+function create() {
+}
 
-let boxA = Bodies.rectangle(400, 200, 80, 80)
-let boxB = Bodies.rectangle(450, 50, 80, 80)
-let ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true })
-
-///
-/// start
-///
-
-World.add(engine.world, [boxA, boxB, ground])
-Engine.run(engine)
-Render.run(render)
+function update() {
+}
