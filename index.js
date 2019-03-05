@@ -7,8 +7,9 @@ let render = Render.create({
 })
 
 ///
-/// create items
+/// create scene
 ///
+
 
 let boxA = Bodies.rectangle(400, 200, 80, 80)
 let boxB = Bodies.rectangle(450, 50, 80, 80)
