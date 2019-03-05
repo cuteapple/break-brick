@@ -7,11 +7,12 @@ let config = {
         create,
         update
     }
-};
+}
 
 let game = new Phaser.Game(config);
 
 function preload() {
+    this.load.image('img/brick.png')
 }
 
 function create() {
