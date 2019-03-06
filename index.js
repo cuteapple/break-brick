@@ -28,34 +28,25 @@ let walls = [
 	Bodies.rectangle(width / 2, height, width, 50, { isStatic: true })
 ]
 
-for (let wall of walls) {
-	//wall.render.strokeStyle = 'red'//randomColorString()
-	//wall.render.lineWidth = 3
-}
 
 let bricks = []
-
 for (let x = 100; x <= width - 100; x += 50) {
 	for (let y = 100; y < height - 200; y += 30) {
 		let brick = Bodies.rectangle(x, y, 45, 20, { isStatic: true })
 		brick.label = 'brick'
+		brick.strokeStyle = randomColorString()
+		brick.lineWidth = 3
 		bricks.push(brick)
 	}
 }
 
 
-for (let body of bricks) {
-	body.render.strokeStyle = randomColorString()
-	body.render.lineWidth = 3
-}
-
-
-let boxA = Bodies.rectangle(400, 200, 80, 80)
-let boxB = Bodies.rectangle(450, 50, 80, 80)
-let box50 = Bodies.rectangle(500, 130, 50, 50)
-
 let ball = Bodies.circle(width / 2, height - 100, 10, { label: 'ball' })
 Matter.Body.setVelocity(ball, { x: 10, y: 10 })
+// keep ball speed (bug in matter js)
+Events.on(engine, 'beforeUpdate', ev => {
+	Matter.Body.setVelocity(ball, Matter.Vector.mult(ball.velocity, speed / ball.speed))
+})
 
 
 ///
@@ -76,13 +67,6 @@ World.add(engine.world, [...bricks, ...walls, ball])
 Engine.run(engine)
 Render.run(render)
 
-
-// keep ball speed
-Events.on(engine, 'beforeUpdate', ev => {
-	let gain_velocity = Matter.Vector.mult(ball.velocity, speed / ball.speed)
-	console.log(gain_velocity)
-	Matter.Body.setVelocity(ball, gain_velocity)
-})
 
 // distroy brick
 Events.on(engine, 'collisionEnd', function (event) {
