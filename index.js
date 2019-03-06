@@ -3,7 +3,7 @@ let { Engine, Render, World, Bodies } = Matter
 let engine = Engine.create()
 let render = Render.create({
     element: document.body,
-    engine: engine
+    engine
 })
 
 ///
