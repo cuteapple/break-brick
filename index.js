@@ -1,6 +1,6 @@
-const { Engine, Render, World, Bodies } = Matter
+const { Engine, Render, World, Bodies, Events } = Matter
 const width = 800, height = 800;
-
+const speed = 10
 
 let engine = Engine.create()
 let render = Render.create({
@@ -37,7 +37,7 @@ let bricks = []
 
 for (let x = 100; x <= width - 100; x += 50) {
 	for (let y = 100; y < height - 200; y += 30) {
-		bricks.push(Bodies.rectangle(x, y, 40, 20, { isStatic: true }))
+		bricks.push(Bodies.rectangle(x, y, 45, 20, { isStatic: true }))
 	}
 }
 
@@ -50,14 +50,32 @@ for (let body of bricks) {
 
 let boxA = Bodies.rectangle(400, 200, 80, 80)
 let boxB = Bodies.rectangle(450, 50, 80, 80)
-
 let box50 = Bodies.rectangle(500, 130, 50, 50)
+
+let ball = Bodies.circle(width / 2, height - 100, 10)
+Matter.Body.setVelocity(ball, { x: 10, y: 10 })
+
+Events.on(engine, 'beforeUpdate', ev => {
+	let gain_velocity = Matter.Vector.mult(ball.velocity, speed / ball.speed)
+	console.log(gain_velocity)
+	Matter.Body.setVelocity(ball, gain_velocity)
+})
 
 ///
 /// start
 ///
 
-World.add(engine.world, [...bricks, ...walls])
+for (let o of [...bricks, ...walls, ball]) {
+	o.friction = 0
+	o.frictionAir = 0
+	o.restitution = 1
+	o.frictionStatic = 0
+	o.inertia = 10000000000
+}
+
+
+engine.world.gravity.y = 0
+World.add(engine.world, [...bricks, ...walls, ball])
 Engine.run(engine)
 Render.run(render)
 
