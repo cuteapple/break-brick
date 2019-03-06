@@ -58,7 +58,6 @@ for (let o of [...bricks, ...walls, ball]) {
 	o.frictionAir = 0
 	o.restitution = 1
 	o.frictionStatic = 0
-	o.inertia = 10000000000
 }
 
 
