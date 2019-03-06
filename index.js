@@ -37,7 +37,9 @@ let bricks = []
 
 for (let x = 100; x <= width - 100; x += 50) {
 	for (let y = 100; y < height - 200; y += 30) {
-		bricks.push(Bodies.rectangle(x, y, 45, 20, { isStatic: true }))
+		let brick = Bodies.rectangle(x, y, 45, 20, { isStatic: true })
+		brick.label = 'brick'
+		bricks.push(brick)
 	}
 }
 
@@ -91,7 +93,7 @@ Events.on(engine, 'collisionEnd', function (event) {
 		let another
 		if (pair.bodyA.label == 'ball') another = pair.bodyB
 		else if (pair.bodyB.label == 'ball') another = pair.bodyA
-		if (another.label != 'ball') {
+		if (another.label == 'brick') {
 			World.remove(engine.world, another)
 		}
 	}
