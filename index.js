@@ -52,14 +52,9 @@ let boxA = Bodies.rectangle(400, 200, 80, 80)
 let boxB = Bodies.rectangle(450, 50, 80, 80)
 let box50 = Bodies.rectangle(500, 130, 50, 50)
 
-let ball = Bodies.circle(width / 2, height - 100, 10)
+let ball = Bodies.circle(width / 2, height - 100, 10, { label: 'ball' })
 Matter.Body.setVelocity(ball, { x: 10, y: 10 })
 
-Events.on(engine, 'beforeUpdate', ev => {
-	let gain_velocity = Matter.Vector.mult(ball.velocity, speed / ball.speed)
-	console.log(gain_velocity)
-	Matter.Body.setVelocity(ball, gain_velocity)
-})
 
 ///
 /// start
@@ -79,3 +74,25 @@ World.add(engine.world, [...bricks, ...walls, ball])
 Engine.run(engine)
 Render.run(render)
 
+
+// keep ball speed
+Events.on(engine, 'beforeUpdate', ev => {
+	let gain_velocity = Matter.Vector.mult(ball.velocity, speed / ball.speed)
+	console.log(gain_velocity)
+	Matter.Body.setVelocity(ball, gain_velocity)
+})
+
+// distroy brick
+Events.on(engine, 'collisionEnd', function (event) {
+	let pairs = event.pairs;
+
+	// change object colours to show those ending a collision
+	for (let pair of pairs) {
+		let another
+		if (pair.bodyA.label == 'ball') another = pair.bodyB
+		else if (pair.bodyB.label == 'ball') another = pair.bodyA
+		if (another.label != 'ball') {
+			World.remove(engine.world, another)
+		}
+	}
+});
