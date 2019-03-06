@@ -7,7 +7,18 @@ const perfectProperty = {
 	restitution: 1,
 	frictionStatic: 0
 }
-let engine = Engine.create()
+const staticPerfectProperty = {
+	isStatic: true,
+	friction: 0,
+	frictionAir: 0,
+	restitution: 1,
+	frictionStatic: 0
+}
+
+let engine = Engine.create({
+	positionIterations: 10,
+	velocityIterations: 10
+})
 engine.world.gravity.y = 0
 
 let render = Render.create({
@@ -33,15 +44,16 @@ function randomColorString() {
 
 
 let walls = [
-	Bodies.rectangle(width / 2, 0, width, 50, { isStatic: true, ...perfectProperty }),
-	Bodies.rectangle(0, height / 2, 50, height, { isStatic: true, ...perfectProperty }),
-	Bodies.rectangle(width, height / 2, 50, height, { isStatic: true, ...perfectProperty }),
-	Bodies.rectangle(width / 2, height, width, 50, { isStatic: true, ...perfectProperty })
+	Bodies.rectangle(width / 2, 0, width, 50, staticPerfectProperty),
+	Bodies.rectangle(0, height / 2, 50, height, staticPerfectProperty),
+	Bodies.rectangle(width, height / 2, 50, height, staticPerfectProperty),
+	Bodies.rectangle(width / 2, height, width, 50, staticPerfectProperty)
 ]
 
 
 
-let ball = Bodies.circle(width / 2, height - 100, 10, { label: 'ball', ...perfectProperty })
+let ball = Bodies.circle(width / 2, height - 100, 10, perfectProperty, 1000)
+ball.label = 'ball'
 Matter.Body.setVelocity(ball, { x: 10, y: 10 })
 // keep ball speed (bug in matter js)
 Events.on(engine, 'beforeUpdate', ev => {
@@ -53,7 +65,7 @@ Events.on(engine, 'beforeUpdate', ev => {
 let bricks = []
 for (let x = 100; x <= width - 100; x += 50) {
 	for (let y = 100; y < height - 200; y += 30) {
-		let brick = Bodies.rectangle(x, y, 45, 20, { isStatic: true, ...perfectProperty })
+		let brick = Bodies.rectangle(x, y, 45, 20, staticPerfectProperty)
 		brick.label = 'brick'
 		brick.render.strokeStyle = randomColorString()
 		brick.render.lineWidth = 3
@@ -78,11 +90,11 @@ Events.on(engine, 'collisionEnd', function (event) {
 
 
 
-let bar = Bodies.rectangle(width / 2, height - 100, 100, 20, { isStatic: true, ...perfectProperty })
+let bar = Bodies.rectangle(width / 2, height - 100, 100, 20, staticPerfectProperty)
 Events.on(engine, 'beforeUpdate', ev => {
 	Matter.Body.setPosition(bar, { x: mouse.position.x, y: bar.position.y })
 })
 
-World.add(engine.world, [...bricks, ...walls, ball, bar])
+World.add(engine.world, [bar, ball, ...bricks, ...walls])
 Engine.run(engine)
 Render.run(render)
