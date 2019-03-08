@@ -8,11 +8,7 @@ const perfectProperty = {
 	frictionStatic: 0
 }
 const staticPerfectProperty = {
-	isStatic: true,
-	friction: 0,
-	frictionAir: 0,
-	restitution: 1,
-	frictionStatic: 0
+	isStatic: true, ...perfectProperty
 }
 
 let engine = Engine.create({
